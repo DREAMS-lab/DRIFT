@@ -1,0 +1,242 @@
+<html>
+	<head>
+	 	<!-- Fonts and icons -->
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  		<!-- CSS Files -->
+		<link href="static/css/material-dashboard.min.css" rel="stylesheet" />
+
+	</head>
+
+
+	<!-- BODY -->
+	<body class="dark-edition">
+		
+		<div class="content">
+        	<div class="container-fluid">
+			
+			<!-- CONTENT -->
+           		<div class="fuzzer-box">
+				<div class="card">
+				{% include 'tabs.html' %}
+				{% include 'contents.html' %}
+				</div>
+      			</div>
+
+		</div>
+		</div>
+
+	</body>
+
+
+</html>
+
+<!-- JS Scripts -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--<script src="static/js/popper.min.js"></script>-->
+<script src="static/js/bootstrap-material-design.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+
+<!-- Styling -->
+<style>
+.fuzzer-box {
+    height: 400px;
+    width: 1400px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -400px;
+    margin-left: -700px;
+}
+</style>
+
+<!-- Main live UI handlers -->
+<script type="text/javascript" charset="utf-8">
+    var connected = false;
+    var fuzzing = false;
+
+    var config;
+    var lineChart;
+    var context;
+
+    var socket = io();
+    socket.on('connect', function() {
+	connected = true;
+    });
+
+
+ $(document).ready(function () {
+        config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Exections/second",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: ''
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Execs/Second'
+                        }
+                    }]
+                }
+            }
+        };
+
+        context = document.getElementById('canvas').getContext('2d');
+        lineChart = new Chart(context, config);
+
+
+
+        config2 = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "Coverage/second",
+                    backgroundColor: 'rgb(99, 255, 147)',
+                    borderColor: 'rgb(99, 255, 147)',
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: ''
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Coverage/Second'
+                        }
+                    }]
+                }
+            }
+        };
+
+        context2 = document.getElementById('canvas-coverage').getContext('2d');
+        lineChart2 = new Chart(context2, config2);
+
+    });
+
+    // recieves data from phuzzer
+    socket.on('output', (data) => {
+	console.log(data);
+
+	if (config.data.labels.length === 20) {
+		config.data.labels.shift();
+		config.data.datasets[0].data.shift();
+	}
+	config.data.labels.push(data.time);
+	config.data.datasets[0].data.push(data.value);
+	lineChart.update();
+
+    });
+    // recieves data from phuzzer
+    socket.on('output-coverage', (data) => {
+	console.log(data);
+
+	if (config2.data.labels.length === 20) {
+		config2.data.labels.shift();
+		config2.data.datasets[0].data.shift();
+	}
+	config2.data.labels.push(data.time);
+	config2.data.datasets[0].data.push(data.value);
+	lineChart2.update();
+
+    });
+
+    function binshow() {
+	  var x = document.getElementById("customdiv");
+	  x.style.display = "block";
+    }
+
+    function binhide() {
+	  var x = document.getElementById("customdiv");
+	  x.style.display = "none";
+    }
+    // Sends fuzzing options to server
+    $("#run_fuzzer").click(function() {
+    	if (connected) {
+
+		if (!fuzzing) {
+			socket.emit('start_fuzzing',
+				{
+					binary: $.trim($('#binary-name').text()),
+					cbpath: $.trim($('#cbpath').val()),
+					argsp: $.trim($('#argsp').val()),
+					dict: $.trim($('#dictpath').val()),
+					afl_cores: parseInt($.trim($('#afl-cores').text())),
+					no_dictionary: !($('#create-dictionary').is(':checked')),
+					first_crash: ($('#first-crash').is(':checked')),
+					driller_cores: parseInt($.trim($('#driller-cores').text())),
+				}
+			);
+			fuzzing = true;
+			$(this).text("Stop fuzzer");
+			$(this).removeClass('btn-primary').addClass('btn-danger');
+
+		} else {
+			socket.emit('stop_fuzzing',{});
+			fuzzing = false;
+			$(this).text("Run fuzzer");
+			$(this).removeClass('btn-danger').addClass('btn-primary');
+		}
+	
+	}
+    });
+
+
+    $(function(){
+	    $(".dropdown-box .dropdownitem").click(function(){
+	     $(this).parent().parent().find("button").text($(this).text());
+	    });
+    });
+</script>
