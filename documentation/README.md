@@ -118,8 +118,37 @@ OPTIONS:
 -d    Debug mode, runs container with interactive shell instead of WebUI.
 ```
 #### CI Integration
+The CI integration version of the DRIFT WebUI is for use as an extension of the CI pipeline. It runs automatically as an instance to reflect the current
+status of the CI while it is running and fuzzing a component.
+For use, after building the container. Navigate to the CI integration version of the WebUI
+```
+cd DRIFT/src/drift-ui-ci
+```
+1. Include the WebUI code inside the docker container used for fuzzing which is run by the CI, and run the WebUI `start.sh`
+2. Another option is to keep the WebUI docker container seprate and just mount the fuzz-master log path to the WebUI.
+
+DRIFT WebUI will default to monitroing `/dev/shm/work/` and will look for `fuzzer-master.log` as an indicator of the CI starting the fuzzer, it will also pull info from the same path.
+once the log is removed the UI will stop monitoring.
+
+To change the log path to monitor simply modify last line in `DRIFT/src/drift-ui-ci/src/app.py`
+
 ### Options
+DRIFT WebUI provides a set of custom options for cases where a custom binary is to be fuzzed. 
 #### Custom harnesses
+The WebUI interface provides an option to choose a custom binary. Custom binaries are listed in the WebUI dropdown menu with the other components.
+In order for the binary to show it must be placed in `DRIFT/src/drift-ui/src/examples/`. The binary must have an stdin input vector or otherwise be a harness
+that is provided with the correct arguments option see [Custom arguments](#custom-arguments).
+
 #### Custom dictonaries
+The WebUI provides the option of choosing a custom dictonary to pass to AFL++, the textbox in the WebUI takes the path to the dictonary. 
+The path and the dictonary must be present inside the WebUI container which can be achived through either placing it inside `DRIFT/src/drift-ui/src/examples/` or by mounting a volume.
+
 #### Custom arguments
+The WebUI provides the option of choosing a custom argument to be passed to the binary. The textbox takes arguments in the form AFL takes them. 
+By default AFL++ will pass input through stdin. To pass input through a file for example use `@@` as a custom argument.
+See docs for AFL for more information.
+
 ### Logs
+Detailed Logs of each fuzzing instance are stored in `/dev/shm/work/` in the WebUI container which can be attached to, or run in debug mode to view.
+Another option is to keep the WebUI docker container seprate and just mount the `fuzz-master.log` log path to the WebUI as in the CI integration option.
+
