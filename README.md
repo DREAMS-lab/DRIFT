@@ -1,6 +1,6 @@
 # Drone Research Integrated Fuzzing Tool
 
-<img src="./asu-logo.svg.png" width="250"/> <img src="./drift-logo.png" width="200"/> <img src="./dreams-logo.png" width="250"/> 
+<img src="./assets/asu-logo.svg.png" width="250"/> <img src="./assets/drift-logo.png" width="200"/> <img src="./assets/dreams-logo.png" width="250"/> 
 
 
 The Drone Research Integrated Fuzzing Tool (DRIFT) Sponsored by the [ASU DREAMS Lab](https://web.asu.edu/jdas/home). 
