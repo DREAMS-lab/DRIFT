@@ -120,7 +120,7 @@ Execute the runner script
 ```
 ./run
 ```
-WebUI runs at port 8080 by default. The container can also be run in debug mode and with different options as follows
+WebUI runs at port 8888 by default. The container can also be run in debug mode and with different options as follows
 ```
 Usage: ./run [OPTIONS] <port> (Defaults to port 8888)
 
