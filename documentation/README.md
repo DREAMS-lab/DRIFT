@@ -35,7 +35,12 @@ issues, and vulnerabilities that drone system could have with extreme speeds and
 ## Fuzzing
 Fuzzing or fuzz testing is an automated software testing technique that involves providing invalid,
 unexpected, or random data as inputs to a computer program. The program is then monitored for exceptions such as crashes,
-failing built-in code assertions, or potential memory leaks. Typically, fuzzers are typically used to test programs that take structured inputs.
+failing built-in code assertions, or potential memory leaks. Fuzzers are used to test programs that take structured inputs.
+
+The exact implementation of the fuzzing mechanism in this library varies, and will continue to change with time since this is a prominent research area. Fundamentally, a fuzzer recieves a harnessing program, which harnesses the library/target being fuzzed. The fuzzer passes the harness program, and observes how far the passed inputs get. The fuzzing engine compiles the harness program, allowing the program control flow graph to be monitored. 
+
+For exact information on how different types of fuzzers are used see [LLVM](https://llvm.org/docs/FuzzingLLVM.html#fuzzing-llvm-generic).
+
 ## Research
 DRIFT main focus is DREAMS lab development pipeline and the components involved in developing drone's software.
 Such as PX4, Gazebo, Mavlink. This also includes the various internal sub-components used by said components.
