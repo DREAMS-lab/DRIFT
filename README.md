@@ -26,7 +26,7 @@ After building the GUI it can be started locally in the `src/drift-ui` folder. I
 (cd src/drift-ui; ./run)
 ```
 
-Note that this run is based on your local directory, which must be `src/drift-ui`. You will now have GUI interface which will be running on `http://127.0.0.1:8080`. Simply paste that address into your web browser of choice and enjoy. 
+Note that this run is based on your local directory, which must be `src/drift-ui`. You will now have GUI interface which will be running on `http://127.0.0.1:8888`. Simply paste that address into your web browser of choice and enjoy. 
 
 ### CI
 
