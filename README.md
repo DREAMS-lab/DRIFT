@@ -1,36 +1,6 @@
 # Drone Research Integrated Fuzzing Tool
 
-Test
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-.column {
-  float: left;
-  width: 33.33%;
-  padding: 5px;
-}
-
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-</style>
-
-<div class="row">
-    <div class="column">
-        <img src="./asu-logo.svg.png" alt="Snow" style="width:100%">
-    </div>
-    <div class="column">
-        <img src="./drift-logo.png" alt="Forest" style="width:100%">
-    </div>
-    <div class="column">
-        <img src="./dreams-logo.png" alt="Mountains" style="width:100%">
-    </div>
-</div> 
+<img src="./asu-logo.svg.png" width="300"/> <img src="./drift-logo.png" width="300"/> <img src="./dreams-logo.png" width="300"/> 
 
 
 The Drone Research Integrated Fuzzing Tool (DRIFT) Sponsored by the ASU DREAMS Lab. 
