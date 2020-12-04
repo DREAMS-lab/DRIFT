@@ -58,6 +58,12 @@ Harnessing is the process involing any step necessary to get a useable input vec
 correctly follow the state of its execution. Harnessing is the backbone of fuzzing and thus the manjority of DRIFT efforts were spent researching the different components 
 and harnessing them. Harnesses can be found in [Harnesses](https://github.com/DREAMS-lab/DRIFT/tree/main/harnesses).
 
+A fuzzing harness is a program which allows input from the fuzzing engine to be passed too the libarary which is the subject of the fuzzing procedure being mentioned. An simple example of a fuzzing harness is the [Mavlink single_byte_harness](https://github.com/DREAMS-lab/DRIFT/blob/main/harnesses/mavlink/src/single_byte_harness.cpp). The program has a main, and a stdin which is passed to a function in Mavlink, the library being fuzzed. This program will be comipled with afl-g++, which allows the engine to mount the harnessing program. 
+
+This example has important components: a main, an input vector (in this case it is stdin which takes command line arguments), and a way to call Mavlink. The harnessing program is compiled with the fuzzing engine; the fuzzing engine will be able to trace how far the input, which was passed to the library via the stdin in the harness gets. Exact guides to writing harnesses for afl can be found on the site [afl quick start](https://lcamtuf.coredump.cx/afl/QuickStartGuide.txt).
+
+We have provided some harnesses for Mavlink. It is more than likely there are different harnesses which can be made for the same library. Designing different harnesses for the same library will allow one to fuzz different parts of the libary, which relates to increased code coverage. 
+
 # Components
 ## Fuzzing engine
 The main component of DRIFT is its fuzzing engine. DRIFT can be easily modified to use different fuzzing engines such as AFL, AFL++, and libFuzzer.
