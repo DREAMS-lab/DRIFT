@@ -1,6 +1,6 @@
 # Drone Research Integrated Fuzzing Tool
 
-<img src="./asu-logo.svg.png" width="300"/> <img src="./drift-logo.png" width="300"/> <img src="./dreams-logo.png" width="300"/> 
+<img src="./asu-logo.svg.png" width="250"/> <img src="./drift-logo.png" width="200"/> <img src="./dreams-logo.png" width="250"/> 
 
 
 The Drone Research Integrated Fuzzing Tool (DRIFT) Sponsored by the ASU DREAMS Lab. 
@@ -20,7 +20,7 @@ First you need to build the GUI, which will take a few minutes to build the dock
 (cd src/drift-ui; ./build)
 ```
 
-After building the GUI it can be started locally in the `src/drift-ui` folder. It's important that you put any binary target you want inside the `src/drift-ui` before runing:
+After building the GUI it can be started locally in the `src/drift-ui` folder. It's important that you put any binary target you want inside the `src/drift-ui` before running:
 
 ```bash
 (cd src/drift-ui; ./run)
