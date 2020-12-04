@@ -3,11 +3,11 @@
 <img src="./asu-logo.svg.png" width="250"/> <img src="./drift-logo.png" width="200"/> <img src="./dreams-logo.png" width="250"/> 
 
 
-The Drone Research Integrated Fuzzing Tool (DRIFT) Sponsored by the ASU DREAMS Lab. 
+The Drone Research Integrated Fuzzing Tool (DRIFT) Sponsored by the [ASU DREAMS Lab](https://web.asu.edu/jdas/home). 
 
 ## Abstract 
 
-It’s common knowledge that emerging technologies have played a central role in the modern world; one of these emerging technologies is autonomous drones and robotics. The introduction of automated robotics applications across the globe has spurred a need for secure systems. As more autonomous systems are introduced into high-risk jobs, we need a reusable and scalable method to make autonomous systems more secure and reliable. DRIFT is the implementation of both a GUI and CI approach to increasing security in automated robotics through Fuzzing, a recent development in systems security to improve automated bug discovery.  
+It’s common knowledge that emerging technologies have played a central role in the modern world; one of these emerging technologies is [autonomous drones and robotics](https://www.ros.org/). The introduction of automated robotics applications across the globe has spurred a need for secure systems. As more autonomous systems are introduced into high-risk jobs, we need a reusable and scalable method to make autonomous systems more secure and reliable. DRIFT is the implementation of both a GUI and CI approach to increasing security in automated robotics through [Fuzzing](https://searchsecurity.techtarget.com/definition/fuzz-testing), a recent development in systems security to improve automated bug discovery.  
 
 ## Getting Started   
 There are two main ways to get started: with the [CI](#ci) or with the [GUI](#gui).
