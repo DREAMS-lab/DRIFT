@@ -87,27 +87,35 @@ None
 DEBUG    | Web server started on port 8888
 ```
 
-
-
-### GUI
+### WebUI
 The GUI will allow you to start a fuzzing instance, or multiple instances, from within the interface.
-First you need to build the GUI, which will take a few minutes to build the docker image.
+Once you have the module installed, you can run the WebUI with the following command:
 
-```bash
-(cd src/drift-ui; ./build)
+```console
+drift web --port=8080
 ```
 
-After building the GUI it can be started locally in the `src/drift-ui` folder. It's important that you put any binary target you want inside the `src/drift-ui` before running:
+### Command Line Interface (CLI)
+The CLI allows the user to run the whole fuzzing instance in a stand alone, easy to run, command line tool. It can be ran conveniently with:
 
-```bash
-(cd src/drift-ui; ./run)
+```console
+drift cli chall.bin https://github.com/Pascal-0x90/Travis-Fuzz-Basic.git 
 ```
+Optionally, you can run the command line interface with a WebUI as well to see the current progress of the command line interface via a nice viewable web interface:
+```console
+drift cli chall.bin https://github.com/Pascal-0x90/Travis-Fuzz-Basic.git --web --port=80
+```
+### Continuous Integration (CI)
+We can use the tool to begin CI interaction tool with a CI environment of your choice. Our team chose to use Travis CI to interact with our environment. The idea is as follows:
+```
+[Pipeline] -> [general pipeline]
+            |
+             \-> (Call to remote DRIFT Server) --> [Crashes sent to regression testing]
+                  [DRIFT CI Server]
+```
+1. Pipeline in CI environment will kick off our remote DRIFT CI to start fuzzing.
+2. The DRIFT fuzzing server has `overwatch` command running. This checks if the command from the CI environment has been sent to it. Once it does, we begin fuzzing.
+3. When the DRIFT `overwatch` command finds a crash in the crash folder, it will then commit the newest crash to the given regression testing repo designated by the `overwatch` command ran.
 
-Note that this run is based on your local directory, which must be `src/drift-ui`. You will now have GUI interface which will be running on `http://127.0.0.1:8888`. Simply paste that address into your web browser of choice and enjoy. 
-
-### CI
-
-The CI is a little more complicated to setup, but can be more effective than the GUI. Note, the current implementation of DRIFT allows you to view the fuzzer progress in the CI through a remotely connected GUI specified earlier. 
-
-
+A Web UI will be started on the remote fuzzing server and can be viewed on port `8888`. 
 

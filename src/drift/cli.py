@@ -1,6 +1,8 @@
 # Standard Python Libraries
 import os
 import time
+import signal
+import sys
 
 # Local libraries
 from . import container
@@ -43,18 +45,32 @@ class CLI:
         # self.container.begin_fuzzing("python3 -m phuzzer -p AFL++ -c 1 -w /phuzzui/workdir "/phuzzui/build/$binary"")
         print(self.container.begin_fuzzing())
 
+    def signal_handling(self, signum, frame):
+        """
+        Handle ctrl+c.
+        """
+        DEBUG.debug("Cleaning up!")
+
+        # Kill container
+        try:
+            self.container.kill()
+        except:
+            pass
+        sys.exit(0)
+
     def begin_web(self, port: int = 8888) -> int:
         """Begin the web server to monitor the cli."""
+        signal.signal(signal.SIGINT, self.signal_handling)
         self.container.web(port, "/DRIFT/cliUI")
 
         # Wait till the user wants to quit
         while True:
             try:
                 pass
-            except KeyboardInterrupt:
+            except:
                 DEBUG.debug("Cleaning up!")
                 # Kill `the container
-                self.container.kill()
+                # self.container.kill()
                 break  # Lets get out of here
         return 0
 

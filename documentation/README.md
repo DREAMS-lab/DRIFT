@@ -90,11 +90,11 @@ git clone https://github.com/DREAMS-lab/DRIFT.git
 ```
 Navigate to the standalone version of the WebUI
 ```
-cd DRIFT/src/drift-ui
+cd DRIFT/src/
 ```
-Execute the builder script
+Install the module and run the webUI program with 
 ```
-./build
+drift web [--port=80]
 ```
 
 To install the CI integration version clone DRIFT repository

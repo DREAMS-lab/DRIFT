@@ -136,11 +136,14 @@ class Overwatch:
 
         # inside workdir, make regression testig folder
         # ssh-keyscan github.com >> ~/.ssh/known_hosts
+        #print(self.container.container.exec_run("bash -c 'ssh-keygen -t rsa -f /root/.ssh/ida_rsa -q -N \"\"'", user="root"))
+        LOGGER.info("YOU WILL NEED TO PUT A KEY THAT CAN PULL FROM GIT INTO YOUR .SSH FOLDER")
+        os.system(f"git clone {self.git} workdir/regrepos/{self.repo}")
         self.container.container.exec_run(
-            "bash -c 'printf \"Host github.com\n\tStrictHostKeyChecking no\n\" > ~/.ssh/config'"
+            "bash -c 'printf \"Host github.com\n\tStrictHostKeyChecking no\n\" > ~/.ssh/config'", user="root"
         )
         self.container.container.exec_run(
-            "bash -c 'ssh-keyscan github.com >> ~/.ssh/known_hosts'"
+            "bash -c 'ssh-keyscan github.com >> ~/.ssh/known_hosts'", user="root"
         )
         self.container.container.exec_run(
             "bash -c 'chmod 600 ~/.ssh/config'", user="root"
@@ -154,7 +157,13 @@ class Overwatch:
         self.container.container.exec_run(
             "bash -c 'chown root ~/.ssh/id_rsa'", user="root"
         )
-        os.system(f"git clone {self.git} workdir/regrepos/{self.repo}")
+        self.container.container.exec_run(
+            "bash -c 'git config --global user.name \"Pascal-0x90\"'"
+        )
+        self.container.container.exec_run(
+            "bash -c 'git config --global user.email nksmith6@asu.edu'"
+        )
+        #print(self.container.container.exec_run("cat /root/.ssh/id_rsa"))
 
     def watch_n_launch(self):
         """
@@ -218,10 +227,10 @@ class Overwatch:
     def setup_fuzzing(self):
         """This will setup project for fuzzing."""
         # Will throw project into workdir, project folder called 'project'
-        print(self.container.grab_project())
+        self.container.grab_project()
 
         # Run the compiling script on the project
-        print(self.container.compile_project())
+        self.container.compile_project()
 
     def begin_web(self, port: int = 8888) -> int:
         """Begin the web server to monitor the cli."""

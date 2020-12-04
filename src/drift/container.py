@@ -78,6 +78,7 @@ class Container:
                     shutil.move(self.workdir, f"workdir_bak")
         # If we are not using a workdir (ie in the cli or ci) 
         # then dont create the build folder
+        print(self.workdir)
         if self.workdir != "":
             LOGGER.info("Making build folder")
             os.mkdir(self.workdir)
@@ -97,7 +98,7 @@ class Container:
                 'bind' : '/DRIFT/workdir',
                 'mode' : 'rw'
             },
-            "/home/pascal/.ssh": {
+            "/home/ubuntu/.ssh": {
                 'bind' : '/root/.ssh',
                 'mode' : 'rw'
             }
@@ -148,7 +149,7 @@ class Container:
         setup.sh is responsible for compiling code
         """
         DEBUG.debug("Clone project repository (from git{hub/lab})")
-        self.container.exec_run(f"bash -c 'git clone {self.git} /DRIFT/workdir/project'", user="root").output
+        print(self.container.exec_run(f"bash -c 'git clone {self.git} /DRIFT/workdir/project'", user="root").output)
         LOGGER.info(f"Successfully logged {self.git}")
         
     def compile_project(self):
@@ -159,7 +160,7 @@ class Container:
         If this is not the case, then "it should".
         """
         DEBUG.debug("Compiling project..")
-        self.container.exec_run(f"bash -c './setup.sh {AFL_LOCATION} {self.binary}'", user="root", workdir="/DRIFT/workdir/project")
+        print(self.container.exec_run(f"bash -c './setup.sh {AFL_LOCATION} {self.binary}'", user="root", workdir="/DRIFT/workdir/project"))
         LOGGER.info(f"Successful compilation of {self.binary}. Located in /DRIFT/build (hopefully)")
 
     #TODO: Add ability to pass arguments to fuzzer (phuzzer has it, just need to implement)
@@ -167,7 +168,7 @@ class Container:
         """Starts fuzzing the binary."""
         # python3 -m phuzzer -p AFL++ -c 1 -w /phuzzui/workdir "/phuzzui/build/$binary"
         LOGGER.info(f"Begin fuzzing on /DRIFT/build/{self.binary}")
-        self.container.exec_run(f'python3 -m phuzzer -p AFL++ -c 2 -d 2 -w /DRIFT/workdir/phuzwork "/DRIFT/workdir/build/{self.binary}"', detach=True).output
+        print(self.container.exec_run(f'python3 -m phuzzer -p AFL++ -c 2 -d 2 -w /DRIFT/workdir/phuzwork "/DRIFT/workdir/build/{self.binary}"', detach=True).output)
         # Wait for the dir to be created. Cant really do this better at the moment
         time.sleep(6)
         DEBUG.debug("Fixing perms so we can read directory.")
