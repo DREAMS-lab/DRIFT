@@ -35,7 +35,12 @@ issues, and vulnerabilities that drone system could have with extreme speeds and
 ## Fuzzing
 Fuzzing or fuzz testing is an automated software testing technique that involves providing invalid,
 unexpected, or random data as inputs to a computer program. The program is then monitored for exceptions such as crashes,
-failing built-in code assertions, or potential memory leaks. Typically, fuzzers are typically used to test programs that take structured inputs.
+failing built-in code assertions, or potential memory leaks. Fuzzers are used to test programs that take structured inputs.
+
+The exact implementation of the fuzzing mechanism in this library varies, and will continue to change with time since this is a prominent research area. Fundamentally, a fuzzer recieves a harnessing program, which harnesses the library/target being fuzzed. The fuzzer passes the harness program, and observes how far the passed inputs get. The fuzzing engine compiles the harness program, allowing the program control flow graph to be monitored. 
+
+For exact information on how different types of fuzzers are used see [LLVM](https://llvm.org/docs/FuzzingLLVM.html#fuzzing-llvm-generic).
+
 ## Research
 DRIFT main focus is DREAMS lab development pipeline and the components involved in developing drone's software.
 Such as PX4, Gazebo, Mavlink. This also includes the various internal sub-components used by said components.
@@ -57,6 +62,12 @@ we have harnessed multiple input vecotors to Mavlink allowing DRIFT to integrate
 Harnessing is the process involing any step necessary to get a useable input vector to allow fuzzer to feed an input to the program, and have the ability to
 correctly follow the state of its execution. Harnessing is the backbone of fuzzing and thus the manjority of DRIFT efforts were spent researching the different components 
 and harnessing them. Harnesses can be found in [Harnesses](https://github.com/DREAMS-lab/DRIFT/tree/main/harnesses).
+
+A fuzzing harness is a program which allows input from the fuzzing engine to be passed too the libarary which is the subject of the fuzzing procedure being mentioned. An simple example of a fuzzing harness is the [Mavlink single_byte_harness](https://github.com/DREAMS-lab/DRIFT/blob/main/harnesses/mavlink/src/single_byte_harness.cpp). The program has a main, and a stdin which is passed to a function in Mavlink, the library being fuzzed. This program will be comipled with afl-g++, which allows the engine to mount the harnessing program. 
+
+This example has important components: a main, an input vector (in this case it is stdin which takes command line arguments), and a way to call Mavlink. The harnessing program is compiled with the fuzzing engine; the fuzzing engine will be able to trace how far the input, which was passed to the library via the stdin in the harness gets. Exact guides to writing harnesses for afl can be found on the site [afl quick start](https://lcamtuf.coredump.cx/afl/QuickStartGuide.txt).
+
+We have provided some harnesses for Mavlink. It is more than likely there are different harnesses which can be made for the same library. Designing different harnesses for the same library will allow one to fuzz different parts of the libary, which relates to increased code coverage. 
 
 # Components
 ## Fuzzing engine
